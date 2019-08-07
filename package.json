@@ -1,0 +1,20 @@
+{
+  "name": "ntlm-socket",
+  "version": "1.0.0",
+  "description": "A tcp socket that implements the protocol for proxies NTLM",
+  "main": "ntlm-socket.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "node ./tests/test"
+  },
+  "keywords": [
+    "ntlm",
+    "socket",
+    "proxy",
+    "http"
+  ],
+  "author": "Hugo Marello",
+  "license": "MIT"
+}
