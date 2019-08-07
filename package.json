@@ -1,6 +1,6 @@
 {
   "name": "ntlm-socket",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A tcp socket that implements the protocol for proxies NTLM",
   "main": "ntlm-socket.js",
   "directories": {
@@ -11,10 +11,10 @@
   },
   "homepage": "https://github.com/hugo-marello/ntlm-socket#readme",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/hugo-marello/ntlm-socket"
+    "type": "git",
+    "url": "https://github.com/hugo-marello/ntlm-socket"
   },
-  "url" : "https://github.com/hugo-marello/ntlm-socket/issues",
+  "url": "https://github.com/hugo-marello/ntlm-socket/issues",
   "keywords": [
     "ntlm",
     "socket",
