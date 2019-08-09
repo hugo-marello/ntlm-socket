@@ -6,7 +6,7 @@ module.exports = class NtlmSocket extends Duplex {
     _negotiationStarted = false;
     _socket = new Socket();
     _optionalHeaders = '';
-
+    _firstPayload = '';
     customEvents = ['ntlm-error', 'ntlm-data', 'ntlm-authorized', 'ntlm-authenticate', 'ntlm-challenge', 'ntlm-negotiate'];
     socketEvents = ['close', 'connect', 'data', 'drain', 'end', 'error', 'lookup', 'ready', 'timeout'];
 
@@ -43,7 +43,7 @@ module.exports = class NtlmSocket extends Duplex {
         }
         let httpMethod = headers.shift();
         let statusCode = httpMethod.match(/HTTP\/\d\.\d (.*) /);
-        if(!statusCode || statusCode[1] != '407') {
+        if(!statusCode || (statusCode[1] != '407' && statusCode[1] != '401')) {
             return this.emit('ntlm-error', 'Proxy challenge answer mismatch 407(Authentication Required).\n'+data);
         }
 
@@ -154,9 +154,12 @@ module.exports = class NtlmSocket extends Duplex {
         
         this._firstMessage = chunk.slice(0, httpEnd+2); //also removing last terminator of http request
         this._firstCb = cb;
+        if(chunk.length > httpEnd + 4) { // has payload
+            this._firstPayload = chunk.slice(httpEnd+4);
+        }
 
         let NTLM = this._ntlmNegotiateMsg();
-        let request = this._firstMessage + this._optionalHeaders + 'Proxy-Authorization: NTLM '+NTLM+'\r\n\r\n';
+        let request = this._firstMessage + this._optionalHeaders + 'Proxy-Authorization: NTLM '+NTLM+'\r\n\r\n'+this._firstPayload;
         
         this._negotiationStarted = true;
         this._socket.write(request, () => {
@@ -166,7 +169,7 @@ module.exports = class NtlmSocket extends Duplex {
 
     _writeAuthenticate() {
         let NTLM = this._ntlmAuthenticateMsg();
-        let request = this._firstMessage + this._optionalHeaders + 'Proxy-Authorization: NTLM '+NTLM+'\r\n\r\n';
+        let request = this._firstMessage + this._optionalHeaders + 'Proxy-Authorization: NTLM '+NTLM+'\r\n\r\n'+this._firstPayload;
         this._socket.write(request, () => {            
             if(this._firstCb) {
                 this._firstCb();
