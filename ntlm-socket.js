@@ -170,7 +170,7 @@ module.exports = class NtlmSocket extends Duplex {
     _writeAuthenticate() {
         let NTLM = this._ntlmAuthenticateMsg();
         let request = this._firstMessage + this._optionalHeaders + 'Proxy-Authorization: NTLM '+NTLM+'\r\n\r\n'+this._firstPayload;
-        this._socket.write(request, () => {            
+        this._socket.write(request, () => {
             if(this._firstCb) {
                 this._firstCb();
             }
