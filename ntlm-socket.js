@@ -27,7 +27,6 @@ module.exports = class NtlmSocket extends Duplex {
 
         this._socket.once('data', (data) => this._parseChallenge(data));
         this.on('ntlm-data', (data) => {
-            console.log(typeof data);
             this.push(data);
         });
     }
